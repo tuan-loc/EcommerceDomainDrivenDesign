@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EcommerceDomainDrivenDesign.Infrastructure.Database.Configurations
 {
-    internal class ProductConfiguration : IEntityTypeConfiguration<Product>
+    internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
     {
         public void Configure(EntityTypeBuilder<Product> builder)
         {
