@@ -1,5 +1,8 @@
-﻿using EcommerceDomainDrivenDesign.Domain.Core.Messaging;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
+using EcommerceDomainDrivenDesign.Domain.Core.Messaging;
 
 namespace EcommerceDomainDrivenDesign.Infrastructure.Messaging
 {

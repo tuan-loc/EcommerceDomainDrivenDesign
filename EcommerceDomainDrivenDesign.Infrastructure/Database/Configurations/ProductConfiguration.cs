@@ -1,4 +1,5 @@
-﻿using EcommerceDomainDrivenDesign.Domain.Products;
+﻿using System;
+using EcommerceDomainDrivenDesign.Domain.Products;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -17,12 +18,8 @@ namespace EcommerceDomainDrivenDesign.Infrastructure.Database.Configurations
             builder.OwnsOne(e => e.Price, b =>
             {
                 b.Property(e => e.Value).HasColumnName("Price").HasColumnType("decimal(5,2)");
-                b.OwnsOne(e => e.Currency, bc =>
-                {
-                    bc.Property(e => e.Name).HasColumnName("Currency").HasMaxLength(5).IsRequired();
-                    bc.Property(e => e.Symbol).HasColumnName("CurrencySymbol").HasMaxLength(5).IsRequired();
-                });
+                b.Property(e => e.CurrencyCode).HasColumnName("Currency").HasMaxLength(5).IsRequired();
             });
         }
     }
-}
+}  

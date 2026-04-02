@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EcommerceDomainDrivenDesign.Application.Customers.RegisterCustomer;
 using EcommerceDomainDrivenDesign.Application.Customers.UpdateCustomer;
+using EcommerceDomainDrivenDesign.Application.Orders.PlaceOrder;
 
 namespace EcommerceDomainDrivenDesign.Application.AutoMapper
 {
@@ -10,9 +11,6 @@ namespace EcommerceDomainDrivenDesign.Application.AutoMapper
         {
             CreateMap<RegisterCustomerRequest, RegisterCustomerCommand>()
             .ConstructUsing(c => new RegisterCustomerCommand(c.Email, c.Name, c.Password, c.PasswordConfirm));
-
-            CreateMap<UpdateCustomerRequest, UpdateCustomerCommand>()
-            .ConstructUsing(c => new UpdateCustomerCommand(c.Id, c.Name));
         }
     }
 }

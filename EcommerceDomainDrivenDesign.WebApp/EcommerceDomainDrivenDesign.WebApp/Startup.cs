@@ -1,4 +1,4 @@
-﻿using EcommerceDomainDrivenDesign.Infrastructure.Identity.Helpers;
+using EcommerceDomainDrivenDesign.Infrastructure.Identity.Helpers;
 using EcommerceDomainDrivenDesign.Infrastructure.IoC;
 using EcommerceDomainDrivenDesign.WebApp.BackgroundServices;
 using EcommerceDomainDrivenDesign.WebApp.Configurations;
@@ -14,6 +14,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 
+/// <summary>
+/// 2020 - Felipe Alberto | fealberto@gmail.com
+/// </summary>
 namespace EcommerceDomainDrivenDesign.WebApp
 {
     public class Startup
@@ -72,9 +75,12 @@ namespace EcommerceDomainDrivenDesign.WebApp
             services.AddSwaggerSetup();
 
             //Health Checks
-            //services.AddHealthChecksSetup(Configuration);
+            services.AddHealthChecksSetup(Configuration);
 
-            services.AddSingleton(new MessageProcessorTaskOptions(TimeSpan.FromSeconds(10), 10));
+            // Message processing
+            var section = this.Configuration.GetSection(nameof(MessageProcessorTaskOptions));
+            var messageProcessorTaskOptions = section.Get<MessageProcessorTaskOptions>();
+            services.AddSingleton(messageProcessorTaskOptions);
             services.AddHostedService<MessagesProcessorTask>();
         }
 
@@ -111,13 +117,14 @@ namespace EcommerceDomainDrivenDesign.WebApp
             });
 
             // HealthCheck middleware
-            //app.UseHealthChecks("/hc", new HealthCheckOptions()
-            //{
-            //    Predicate = _ => true,
-            //    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-            //});
-            //app.UseHealthChecksUI(config => config.UIPath = "/hc-ui");
+            app.UseHealthChecks("/hc", new HealthCheckOptions()
+            {
+                Predicate = _ => true,
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+            });
+            app.UseHealthChecksUI(config => config.UIPath = "/hc-ui");
 
+            // Angular SPA
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";

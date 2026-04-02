@@ -2,7 +2,7 @@
 using System.Text.Json.Serialization;
 using FluentValidation.Results;
 
-namespace EcommerceDomainDrivenDesign.Application.Customers
+namespace EcommerceDomainDrivenDesign.Application.Customers.ViewModels
 {
     public class CustomerViewModel
     {

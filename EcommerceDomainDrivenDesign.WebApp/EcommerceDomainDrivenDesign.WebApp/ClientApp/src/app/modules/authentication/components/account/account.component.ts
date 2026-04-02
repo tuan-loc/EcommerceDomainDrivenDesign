@@ -2,17 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
-import { AuthService } from 'app/core/services/auth.service';
 import { AccountService } from '../../account.service';
-import { CustomerRegistration } from 'app/core/models/CustomerRegistration';
+import { RegisterCustomerRequest } from 'app/core/models/requests/RegisterCustomerRequest';
 import { NotificationService } from 'app/core/services/notification.service';
 
 @Component({
   selector: 'app-account',
   templateUrl: './account.component.html',
-  styleUrls: ['./account.component.scss'],
+  styleUrls: ['./account.component.scss']
+
 })
 export class AccountComponent implements OnInit {
+
   accountForm: FormGroup;
   loading = false;
   submitted = false;
@@ -23,8 +24,9 @@ export class AccountComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private accountService: AccountService,
-    private notificationService: NotificationService,
-  ) {}
+    private notificationService: NotificationService
+  ) {
+  }
 
   ngOnInit() {
     this.accountForm = this.formBuilder.group({
@@ -44,32 +46,30 @@ export class AccountComponent implements OnInit {
   }
 
   onSubmit() {
+
     this.submitted = true;
 
     // stop here if form is invalid
     if (this.accountForm.invalid) {
-      return;
+        return;
     }
 
     this.loading = true;
-    const customerRegistration = new CustomerRegistration(
+    const customerRegistration = new RegisterCustomerRequest(
       this.f.email.value,
       this.f.name.value,
       this.f.password.value,
-      this.f.passwordConfirm.value,
-    );
+      this.f.passwordConfirm.value);
 
-    this.accountService
-      .registerAccount(customerRegistration)
-      .pipe(first())
-      .subscribe(
-        (data) => {
-          this.notificationService.showSuccess('Account successfully created!');
-          this.router.navigate([this.returnUrl]);
-        },
-        (error) => {
+    this.accountService.registerAccount(customerRegistration)
+    .pipe(first())
+    .subscribe(
+      data => {
+        this.notificationService.showSuccess("Account successfully created!");
+        this.router.navigate([this.returnUrl]);
+      },
+      error => {
           this.loading = false;
-        },
-      );
+      });
   }
 }

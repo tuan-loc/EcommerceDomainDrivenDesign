@@ -1,5 +1,9 @@
-﻿using EcommerceDomainDrivenDesign.Domain.Core.Messaging;
-using System;
+﻿using System;
+using System.Reflection;
+using EcommerceDomainDrivenDesign.Domain.Core.Messaging;
+using EcommerceDomainDrivenDesign.Domain.Customers.Events;
+using MediatR;
+using Newtonsoft.Json;
 
 namespace EcommerceDomainDrivenDesign.Infrastructure.Messaging
 {
@@ -14,6 +18,18 @@ namespace EcommerceDomainDrivenDesign.Infrastructure.Messaging
 
             var type = @event.GetType().FullName;
             return new StoredEvent(@event, serializer.Serialize(@event));
+        }
+
+        public static T Deserialize<T>(StoredEvent message) where T : class, INotification
+        {
+            var type = GetEventType(message.MessageType);
+            return JsonConvert.DeserializeObject(message.Payload, type) as T;
+        }
+
+        public static Type GetEventType(string messageType)
+        {
+            Type type = Assembly.GetAssembly(typeof(CustomerRegisteredEvent)).GetType(messageType);
+            return type;
         }
     }
 }

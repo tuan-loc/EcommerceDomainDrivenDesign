@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EcommerceDomainDrivenDesign.Infrastructure.Identity.Claims
 {
     public class ClaimsRequirementHandler : AuthorizationHandler<ClaimRequirement>
     {
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, 
             ClaimRequirement requirement)
         {
             var claim = context.User.Claims

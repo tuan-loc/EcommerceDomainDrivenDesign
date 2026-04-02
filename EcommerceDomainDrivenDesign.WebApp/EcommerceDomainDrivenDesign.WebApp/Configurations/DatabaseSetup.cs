@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using EcommerceDomainDrivenDesign.Infrastructure.Database.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -10,11 +13,12 @@ namespace EcommerceDomainDrivenDesign.WebApp.Configurations
     {
         public static void AddDatabaseSetup(this IServiceCollection services, IConfiguration configuration)
         {
-            if (services == null) throw new ArgumentNullException(nameof(services));
+            if (services == null) 
+                throw new ArgumentNullException(nameof(services));
 
             string connString = configuration.GetConnectionString("DefaultConnection");
 
-            services.AddDbContext<EcommerceDDDContext>(options =>
+            services.AddDbContext<EcommerceDomainDrivenDesignContext>(options =>
             {
                 options.UseSqlServer(connString,
                 sqlServerOptionsAction: sqlOptions =>
@@ -23,7 +27,7 @@ namespace EcommerceDomainDrivenDesign.WebApp.Configurations
                 });
             });
 
-            services.AddDbContext<IdentityContext>(options =>
+            services.AddDbContextPool<IdentityContext>(options =>
                 options.UseSqlServer(connString));
         }
     }

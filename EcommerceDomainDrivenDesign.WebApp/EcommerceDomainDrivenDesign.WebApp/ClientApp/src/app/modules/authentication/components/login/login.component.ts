@@ -7,9 +7,11 @@ import { AuthService } from 'app/core/services/auth.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.scss'],
+  styleUrls: ['./login.scss']
+
 })
 export class LoginComponent implements OnInit {
+
   loginForm: FormGroup;
   loading = false;
   submitted = false;
@@ -19,10 +21,10 @@ export class LoginComponent implements OnInit {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private authenticationService: AuthService,
+    private authenticationService: AuthService
   ) {
     // redirect to home if already logged in
-    if (this.authenticationService.currentUserValue) {
+    if (this.authenticationService.currentCustomerValue) {
       this.router.navigate(['/home']);
     }
   }
@@ -30,7 +32,7 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
       email: ['', Validators.required],
-      password: ['', Validators.required],
+      password: ['', Validators.required]
     });
 
     // get return url from route parameters or default to '/'
@@ -43,6 +45,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
+
     this.submitted = true;
 
     // stop here if form is invalid
@@ -51,15 +54,14 @@ export class LoginComponent implements OnInit {
     }
 
     this.loading = true;
-    this.authenticationService
-      .login(this.f.email.value, this.f.password.value)
+    this.authenticationService.login(this.f.email.value, this.f.password.value)
       .pipe(first())
       .subscribe(
-        (data) => {
+        data => {
           this.router.navigate([this.returnUrl]);
         },
-        (error) => {},
-      );
+        error => {
+        });
     this.loading = false;
     this.submitted = false;
   }

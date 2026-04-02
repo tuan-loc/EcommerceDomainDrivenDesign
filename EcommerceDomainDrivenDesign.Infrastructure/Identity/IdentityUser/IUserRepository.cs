@@ -1,8 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace EcommerceDomainDrivenDesign.Infrastructure.Identity.IdentityUser
 {
-    public interface IUserRepository
+    public interface IUserRepository 
     {
         Task<User> GetUserByEmail(string email);
     }

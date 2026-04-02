@@ -1,13 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
-using System.Collections.Generic;
+﻿using System.Reflection;
 using System.Linq;
-using System.Reflection;
+using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace EcommerceDomainDrivenDesign.Infrastructure.Database.Extensions
 {
-    public static class IQueryableExtensions
-    {
+	public static class IQueryableExtensions
+	{
         public static string ToSql<TEntity>(this IQueryable<TEntity> query) where TEntity : class
         {
             var enumerator = query.Provider.Execute<IEnumerable<TEntity>>(query.Expression).GetEnumerator();

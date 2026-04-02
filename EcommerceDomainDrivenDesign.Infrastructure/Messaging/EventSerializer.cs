@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Text.Json;
 using EcommerceDomainDrivenDesign.Domain.Core.Messaging;
 

@@ -1,37 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using EcommerceDomainDrivenDesign.Application.EventSourcing.EventHistoryData;
+using System.Text;
+using EcommerceDomainDrivenDesign.Application.EventSourcing.StoredEvents;
 using EcommerceDomainDrivenDesign.Domain.Core.Messaging;
 
 namespace EcommerceDomainDrivenDesign.Application.EventSourcing
 {
-    public class CustomerEventNormatizer : EventNormatizer<CustomerHistoryData>
+    public class CustomerEventNormatizer : StoredEventNormatizer<CustomerStoredEventData>
     {
-        public override IList<CustomerHistoryData> ToHistoryData(IList<StoredEvent> messages)
-        {
-            IList<CustomerHistoryData> historyData = GetHistoryData(messages);
-            var sorted = historyData.OrderBy(c => c.Timestamp);
-            var categoryHistory = new List<CustomerHistoryData>();
-            var last = new CustomerHistoryData();
+        public override IList<CustomerStoredEventData> ToHistoryData(IList<StoredEvent> messages)
+        {            
+            IList<CustomerStoredEventData> historyData = GetHistoryData(messages);
+            var sortedEvent = historyData.OrderBy(c => c.Timestamp);
+            var categoryHistory = new List<CustomerStoredEventData>();
+            var last = new CustomerStoredEventData();
 
-            foreach (var change in sorted)
+            foreach (var change in sortedEvent)
             {
-                var data = new CustomerHistoryData();
-                data.Id = change.Id == Guid.Empty.ToString() ||
-                    change.Id == last.Id ? "" : change.Id;
-
-                data.Name = string.IsNullOrWhiteSpace(change.Name) ||
-                    change.Name == last.Name ? "" : change.Name;
-
-                data.Action = string.IsNullOrWhiteSpace(change.Action) ? "" : change.Action;
+                var data = new CustomerStoredEventData();
+                data.Id = change.Id == Guid.Empty.ToString() || change.Id == last.Id ? string.Empty : change.Id;
+                data.Name = string.IsNullOrWhiteSpace(change.Name) || change.Name == last.Name ? string.Empty : change.Name;
+                data.Action = string.IsNullOrWhiteSpace(change.Action) ? string.Empty : change.Action;
                 data.Timestamp = change.Timestamp;
-
                 categoryHistory.Add(data);
                 last = change;
             }
 
-            return categoryHistory;
+            return categoryHistory;            
         }
 
     }

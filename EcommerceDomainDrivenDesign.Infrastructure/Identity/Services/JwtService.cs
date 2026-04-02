@@ -1,12 +1,13 @@
-﻿using EcommerceDomainDrivenDesign.Infrastructure.Identity.IdentityUser;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using EcommerceDomainDrivenDesign.Infrastructure.Identity.IdentityUser;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
 namespace EcommerceDomainDrivenDesign.Infrastructure.Identity.Services
 {
@@ -17,7 +18,7 @@ namespace EcommerceDomainDrivenDesign.Infrastructure.Identity.Services
 
         public JwtService(
             UserManager<User> userManager,
-            IOptions<AppSettings> appSettings)
+            IOptions<AppSettings> appSettings) 
         {
             _userManager = userManager;
             _appSettings = appSettings.Value;

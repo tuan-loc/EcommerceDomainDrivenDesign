@@ -4,10 +4,11 @@ import { LocalStorageService } from './services/local-storage.service';
 const TOKEN_KEY = 'auth-token';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class TokenStorageService {
-  constructor(private localStorageService: LocalStorageService) {}
+
+  constructor(private localStorageService: LocalStorageService) { }
 
   public saveToken(token: string) {
     this.localStorageService.clearKey(TOKEN_KEY);
@@ -21,4 +22,5 @@ export class TokenStorageService {
   public clearToken() {
     return this.localStorageService.clearKey(TOKEN_KEY);
   }
+
 }

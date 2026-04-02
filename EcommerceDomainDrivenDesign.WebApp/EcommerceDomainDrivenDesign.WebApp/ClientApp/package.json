@@ -1,11 +1,11 @@
 {
-  "name": "ecommerceddd.webapp",
+  "name": "EcommerceDomainDrivenDesign.webapp",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
     "start": "echo Starting... && ng serve",
     "build": "ng build",
-    "build:ssr": "ng run EcommerceDDD.WebApp:server:dev",
+    "build:ssr": "ng run EcommerceDomainDrivenDesign.WebApp:server:dev",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

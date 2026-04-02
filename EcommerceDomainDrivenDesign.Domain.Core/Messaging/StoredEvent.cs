@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace EcommerceDomainDrivenDesign.Domain.Core.Messaging
 {
@@ -12,10 +15,11 @@ namespace EcommerceDomainDrivenDesign.Domain.Core.Messaging
             Payload = payload;
         }
 
-        public void SetProcessedAt(DateTime date)
+        public void SetProcessedAt(DateTime? date)
         {
             if (date == null)
                 throw new ArgumentNullException(nameof(date));
+
             ProcessedAt = date;
         }
 
@@ -24,6 +28,6 @@ namespace EcommerceDomainDrivenDesign.Domain.Core.Messaging
 
         public Guid Id { get; private set; }
         public string Payload { get; private set; }
-        public DateTime? ProcessedAt { get; private set; }
+        public DateTime? ProcessedAt { get; private set; }       
     }
 }

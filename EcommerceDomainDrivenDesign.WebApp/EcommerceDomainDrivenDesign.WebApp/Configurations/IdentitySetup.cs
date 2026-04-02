@@ -16,10 +16,10 @@ namespace EcommerceDomainDrivenDesign.WebApp.Configurations
 {
     public static class IdentitySetup
     {
-        public static void AddIdentitySetup(this IServiceCollection services,
+        public static void AddIdentitySetup(this IServiceCollection services, 
             IConfiguration configuration)
         {
-            if (null == services)
+            if (null == services) 
                 throw new ArgumentNullException(nameof(services));
 
             services.AddIdentity<User, IdentityRole<Guid>>()
@@ -66,7 +66,7 @@ namespace EcommerceDomainDrivenDesign.WebApp.Configurations
             if (services == null) throw new ArgumentNullException(nameof(services));
 
             services.AddAuthorization(options =>
-            {
+            {                
                 options.AddPolicy("CanRead", policy => policy.Requirements.Add(new ClaimRequirement("CanRead", "Read")));
                 options.AddPolicy("CanSave", policy => policy.Requirements.Add(new ClaimRequirement("CanSave", "Save")));
                 options.AddPolicy("CanDelete", policy => policy.Requirements.Add(new ClaimRequirement("CanDelete", "Delete")));

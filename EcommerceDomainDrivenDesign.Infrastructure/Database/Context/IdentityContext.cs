@@ -1,7 +1,8 @@
-﻿using EcommerceDomainDrivenDesign.Infrastructure.Identity.IdentityUser;
+﻿using System;
+using System.Threading.Tasks;
+using EcommerceDomainDrivenDesign.Infrastructure.Identity.IdentityUser;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace EcommerceDomainDrivenDesign.Infrastructure.Database.Context
 {

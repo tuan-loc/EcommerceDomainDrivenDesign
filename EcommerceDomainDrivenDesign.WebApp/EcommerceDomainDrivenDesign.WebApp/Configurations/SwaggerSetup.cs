@@ -14,7 +14,7 @@ namespace EcommerceDomainDrivenDesign.WebApp.Configurations
         /// <param name="services"></param>
         public static void AddSwaggerSetup(this IServiceCollection services)
         {
-            if (services == null)
+            if (services == null) 
                 throw new ArgumentNullException(nameof(services));
 
             services.AddSwaggerGen(s =>
@@ -25,7 +25,7 @@ namespace EcommerceDomainDrivenDesign.WebApp.Configurations
                     Title = "Ecommerce DDD",
                     Description = "Ecommerce DDD API Swagger",
                     Contact = new OpenApiContact { Name = "Felipe Alberto", Email = "fealberto@gmail.com" },
-                    License = new OpenApiLicense() { Name = "MIT", Url = new Uri("https://github.com/falberthen/EcommerceDDD/blob/master/LICENSE") }
+                    License = new OpenApiLicense() { Name = "MIT", Url = new Uri("https://github.com/falberthen/EcommerceDomainDrivenDesign/blob/master/LICENSE") }
                 });
 
                 s.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme

@@ -1,12 +1,16 @@
-﻿using System;
+﻿using EcommerceDomainDrivenDesign.Domain.Core.Base;
+using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace EcommerceDomainDrivenDesign.Domain.Payments
 {
-    public interface IPaymentRepository
+    public interface IPaymentRepository : IRepository<Payment>
     {
-        public Task AddPayment(Payment payment, CancellationToken cancellationToken = default);
-        public Task<Payment> GetPaymentById(Guid id, CancellationToken cancellationToken = default);
+        Task Add(Payment payment, CancellationToken cancellationToken = default);
+        Task<Payment> GetById(Guid paymentId, CancellationToken cancellationToken = default);
+        Task<Payment> GetByOrderId(Guid orderId, CancellationToken cancellationToken = default);
     }
 }

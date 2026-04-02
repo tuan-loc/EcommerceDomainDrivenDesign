@@ -1,8 +1,10 @@
-﻿using EcommerceDomainDrivenDesign.Domain.Payments;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using EcommerceDomainDrivenDesign.Domain.Payments;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using System;
 
 namespace EcommerceDomainDrivenDesign.Infrastructure.Database.Configurations
 {
@@ -14,11 +16,21 @@ namespace EcommerceDomainDrivenDesign.Infrastructure.Database.Configurations
 
             builder.HasKey(b => b.Id);
 
-            builder.Property<Guid>("OrderId").HasColumnName("OrderId");
-            builder.Property<DateTime>("CreatedAt").HasColumnName("CreatedAt");
-            builder.Property<DateTime?>("PaidAt").HasColumnName("PaidAt");
-            builder.Property("Status").HasColumnName("StatusId").HasConversion(new EnumToNumberConverter<PaymentStatus, byte>());
-            builder.Property<bool>("ConfirmationEmailSent").HasColumnName("ConfirmationEmailSent");
+            builder.Property<Guid>("CustomerId")
+                .HasColumnName("CustomerId");
+
+            builder.Property<Guid>("OrderId")
+                .HasColumnName("OrderId");            
+
+            builder.Property<DateTime>("CreatedAt")
+                .HasColumnName("CreatedAt");
+
+            builder.Property<DateTime?>("PaidAt")
+                .HasColumnName("PaidAt");
+
+            builder.Property("Status")
+                .HasColumnName("StatusId")
+                .HasConversion(new EnumToNumberConverter<PaymentStatus, byte>());
         }
     }
 }

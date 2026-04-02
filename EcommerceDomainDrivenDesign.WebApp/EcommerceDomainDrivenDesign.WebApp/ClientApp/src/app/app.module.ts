@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
-import { EcommerceModule } from './modules/ecommerce/ecomerce.module';
+import { EcommerceModule } from './modules/ecommerce/ecommerce.module';
 import { SharedModule } from './shared/shared.module';
 import { AuthenticationModule } from './modules/authentication/authentication.module';
 import { APP_ROUTES } from './app.routes';
@@ -14,7 +14,9 @@ import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { ServerErrorInterceptor } from './core/interceptors/error.interceptor';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [
+    AppComponent
+  ],
   imports: [
     SharedModule,
     CoreModule,
@@ -23,17 +25,13 @@ import { ServerErrorInterceptor } from './core/interceptors/error.interceptor';
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
-    RouterModule.forRoot(APP_ROUTES),
+    RouterModule.forRoot(APP_ROUTES)
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: ServerErrorInterceptor,
-      multi: true,
-    },
+    { provide: HTTP_INTERCEPTORS, useClass: ServerErrorInterceptor, multi: true },
   ],
   exports: [RouterModule],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

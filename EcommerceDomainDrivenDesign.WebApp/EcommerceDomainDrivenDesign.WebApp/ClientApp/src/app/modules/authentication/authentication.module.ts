@@ -6,7 +6,14 @@ import { AccountComponent } from './components/account/account.component';
 import { RouterModule } from '@angular/router';
 
 @NgModule({
-  declarations: [LoginComponent, AccountComponent],
-  imports: [RouterModule, CommonModule, SharedModule],
+  declarations: [
+    LoginComponent,
+    AccountComponent
+  ],
+  imports: [
+    RouterModule,
+    CommonModule,
+    SharedModule
+  ]
 })
-export class AuthenticationModule {}
+export class AuthenticationModule { }

@@ -1,10 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace EcommerceDomainDrivenDesign.Application.Orders.PlaceOrder
 {
     public class PlaceOrderRequest
     {
-        public List<ProductDto> Products { get; set; }
+        [Required(ErrorMessage = "The {0} field is required.")]
+        public Guid CustomerId { get; set; }
+
+        [Required(ErrorMessage = "The {0} field is required.")]
         public string Currency { get; set; }
     }
 }

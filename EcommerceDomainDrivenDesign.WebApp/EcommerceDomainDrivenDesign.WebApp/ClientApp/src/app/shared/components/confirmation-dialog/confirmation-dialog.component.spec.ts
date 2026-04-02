@@ -11,8 +11,9 @@ describe('ModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ConfirmationDialogComponent],
-    }).compileComponents();
+      declarations: [ ConfirmationDialogComponent ]
+    })
+    .compileComponents();
   }));
 
   beforeEach(() => {

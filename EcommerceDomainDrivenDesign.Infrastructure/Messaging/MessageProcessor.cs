@@ -1,8 +1,11 @@
-﻿using EcommerceDomainDrivenDesign.Domain;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using EcommerceDomainDrivenDesign.Domain;
+using EcommerceDomainDrivenDesign.Domain.Core.Messaging;
+using Microsoft.Extensions.Logging;
 
 namespace EcommerceDomainDrivenDesign.Infrastructure.Messaging
 {
@@ -12,7 +15,7 @@ namespace EcommerceDomainDrivenDesign.Infrastructure.Messaging
         private readonly IMessagePublisher _publisher;
         private readonly ILogger<MessageProcessor> _logger;
 
-        public MessageProcessor(IEcommerceUnitOfWork unitOfWork,
+        public MessageProcessor(IEcommerceUnitOfWork unitOfWork, 
             IMessagePublisher publisher, ILogger<MessageProcessor> logger)
         {
             _publisher = publisher ?? throw new ArgumentNullException(nameof(publisher));
@@ -22,22 +25,21 @@ namespace EcommerceDomainDrivenDesign.Infrastructure.Messaging
 
         public async Task ProcessMessages(int batchSize, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Fetching messages...");
-
             var messages = await _unitOfWork.MessageRepository.FetchUnprocessed(batchSize, cancellationToken);
             foreach (var message in messages)
             {
                 try
                 {
-                    message.SetProcessedAt(DateTime.UtcNow);
+                    //Setting processed date
+                    message.SetProcessedAt(DateTime.Now);
                     await _publisher.Publish(message, cancellationToken);
 
                     _unitOfWork.MessageRepository.UpdateProcessedAt(message);
                     await _unitOfWork.CommitAsync();
                 }
                 catch (Exception ex)
-                {
-                    _logger.LogError(ex, $"an error has occurred while processing message {message.Id}: {ex.Message}");
+                {                    
+                    _logger.LogError($"\n-------- An error has occurred while processing message {message.Id}: {ex.Message}\n");
                 }
             }
         }

@@ -1,16 +1,22 @@
-﻿using AutoMapper;
-using EcommerceDomainDrivenDesign.Application.Customers.AuthenticateCustomer;
-using EcommerceDomainDrivenDesign.Application.Customers.ListCustomerEventHistory;
-using EcommerceDomainDrivenDesign.Application.Customers.RegisterCustomer;
-using EcommerceDomainDrivenDesign.Application.Customers.UpdateCustomer;
-using EcommerceDomainDrivenDesign.Infrastructure.Identity.Helpers;
-using EcommerceDomainDrivenDesign.WebApp.Controllers.Base;
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using AutoMapper;
+using EcommerceDomainDrivenDesign.Infrastructure.Identity.Helpers;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using EcommerceDomainDrivenDesign.Application.Customers.RegisterCustomer;
+using Microsoft.AspNetCore.Http;
+using EcommerceDomainDrivenDesign.Application.Customers.UpdateCustomer;
+using Microsoft.AspNetCore.Authorization;
+using EcommerceDomainDrivenDesign.Application.Customers.AuthenticateCustomer;
+using EcommerceDomainDrivenDesign.Application.Customers.ListCustomerStoredEvents;
+using System.Net;
+using EcommerceDomainDrivenDesign.Application.Customers.ViewModels;
+using EcommerceDomainDrivenDesign.Application.EventSourcing.StoredEvents;
+using System.Collections.Generic;
+using BuildingBlocks.CQRS.CommandHandling;
+using BuildingBlocks.CQRS.QueryHandling;
+using EcommerceDomainDrivenDesign.WebApp.Controllers.Base;
 
 namespace EcommerceDomainDrivenDesign.WebApp.Controllers
 {
@@ -19,67 +25,88 @@ namespace EcommerceDomainDrivenDesign.WebApp.Controllers
     [ApiController]
     public class CustomersController : BaseController
     {
-        private readonly IMediator _mediator;
         private readonly IMapper _mapper;
 
         public CustomersController(
             IMediator mediator,
             IUserProvider userProvider,
             IMapper mapper)
-            : base(userProvider)
+            : base(userProvider, mediator)
         {
-            _mediator = mediator;
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Authenticates an user and returns JWT 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [AllowAnonymous]
         [HttpPost, Route("login")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> DoLogin([FromBody] AuthenticateCustomerRequest request)
+        [ProducesResponseType(typeof(CustomerViewModel), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> DoLogin([FromBody]AuthenticateCustomerRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
 
             var query = new AuthenticateCustomerQuery(request.Email, request.Password);
-            return Response(await _mediator.Send(query));
+            return Response(await Mediator.Send(query));
         }
 
+        /// <summary>
+        /// Register a new customer
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [AllowAnonymous]
         [HttpPost, Route("register")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(CommandHandlerResult<Guid>), (int)HttpStatusCode.Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Register([FromBody] RegisterCustomerRequest request)
+        public async Task<IActionResult> Register([FromBody]RegisterCustomerRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
 
             var command = _mapper.Map<RegisterCustomerCommand>(request);
-            return Response(await _mediator.Send(command));
+            return Response(await Mediator.Send(command));
         }
 
+        /// <summary>
+        /// Update a customer
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPut, Route("{customerId:guid}")]
         [Authorize(Policy = "CanSave")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateCustomerRequest request)
+        [ProducesResponseType(typeof(CommandHandlerResult<Guid>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Update([FromRoute]Guid customerId, [FromBody]UpdateCustomerRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            request.Id = id;
-            var command = _mapper.Map<UpdateCustomerCommand>(request);
-            return Response(await _mediator.Send(command));
+            var command = new UpdateCustomerCommand(customerId, request.Name);
+            return Response(await Mediator.Send(command));
         }
 
-        [HttpGet, Route("{customerId:guid}/eventhistory")]
+        /// <summary>
+        /// Returns the Stored Events of a given customer
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <returns></returns>
+        [HttpGet, Route("{customerId:guid}/events")]
         [Authorize(Policy = "CanRead")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> ListEventHistory([FromRoute] Guid id)
+        [ProducesResponseType(typeof(QueryHandlerResult<IList<CustomerStoredEventData>>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ListEvents([FromRoute]Guid customerId)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var query = new ListCustomerEventHistoryQuery(id);
-            return Response(await _mediator.Send(query));
+            var query = new ListCustomerStoredEventsQuery(customerId);
+            return Response(await Mediator.Send(query));
         }
     }
 }

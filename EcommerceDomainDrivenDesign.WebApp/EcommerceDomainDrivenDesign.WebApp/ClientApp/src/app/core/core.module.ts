@@ -6,13 +6,16 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { NotificationService } from './services/notification.service';
 import { ConfirmationDialogService } from './services/confirmation-dialog.service';
+import { LocalStorageService } from './services/local-storage.service';
+import { CurrencyNotificationService } from './services/currency-notification.service';
 
 @NgModule({
-  declarations: [],
+  declarations: [
+  ],
   imports: [
     HttpClientModule,
     BrowserAnimationsModule, // required animations module
-    ToastrModule.forRoot(), // ToastrModule added,
+    ToastrModule.forRoot() // ToastrModule added,
   ],
   providers: [
     AuthService,
@@ -21,9 +24,13 @@ import { ConfirmationDialogService } from './services/confirmation-dialog.servic
     ToastrModule,
     NotificationService,
     ConfirmationDialogService,
-  ],
+    LocalStorageService,
+    CurrencyNotificationService
+  ]
 })
+
 export class CoreModule {
+
   constructor(@Optional() @SkipSelf() core: CoreModule) {
     if (core) {
       throw new Error('You should import core module only in the root module');

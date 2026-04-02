@@ -1,21 +1,21 @@
-﻿using EcommerceDomainDrivenDesign.Domain;
-using EcommerceDomainDrivenDesign.Domain.Customers.Orders.Events;
-using MediatR;
+﻿using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Threading;
 using System.Threading.Tasks;
-
+using EcommerceDomainDrivenDesign.Application.Base;
+using EcommerceDomainDrivenDesign.Domain;
+using EcommerceDomainDrivenDesign.Domain.Orders.Events;
+using EcommerceDomainDrivenDesign.Domain.Payments;
+using System;
 
 namespace EcommerceDomainDrivenDesign.Application.Orders.PlaceOrder
 {
     public class OrderPlacedEventHandler : INotificationHandler<OrderPlacedEvent>
     {
-        private IEcommerceUnitOfWork _unitOfWork;
         private readonly IServiceScopeFactory _scopeFactory;
 
-        public OrderPlacedEventHandler(IEcommerceUnitOfWork unitOfWork, IServiceScopeFactory scopeFactory)
+        public OrderPlacedEventHandler(IServiceScopeFactory scopeFactory)
         {
-            _unitOfWork = unitOfWork;
             _scopeFactory = scopeFactory;
         }
 
@@ -23,12 +23,16 @@ namespace EcommerceDomainDrivenDesign.Application.Orders.PlaceOrder
         {
             using (var scope = _scopeFactory.CreateScope())
             {
-                _unitOfWork = scope.ServiceProvider.GetRequiredService<IEcommerceUnitOfWork>();
+                var unitOfWork = scope.ServiceProvider.GetRequiredService<IEcommerceUnitOfWork>();
+                var order = await unitOfWork.OrderRepository.GetById(orderPlacedEvent.OrderId);
 
-                //Creating a payment                
-                var payment = new Payment(orderPlacedEvent.OrderId);
-                await _unitOfWork.PaymentRepository.AddPayment(payment);
-                await _unitOfWork.CommitAsync();
+                if (order == null)
+                    throw new InvalidDataException("Order not found.");
+
+                // Creating a payment
+                var payment = new Payment(Guid.NewGuid(), order);
+                await unitOfWork.PaymentRepository.Add(payment);
+                await unitOfWork.CommitAsync();
             }
         }
     }

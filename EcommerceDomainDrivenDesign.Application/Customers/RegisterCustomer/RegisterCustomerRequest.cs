@@ -1,9 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace EcommerceDomainDrivenDesign.Application.Customers.RegisterCustomer
 {
     public class RegisterCustomerRequest
-    {
+    {        
         [Required(ErrorMessage = "The {0} field is required.")]
         [StringLength(100, ErrorMessage = "The {0} field must be between {2} and {1} characters", MinimumLength = 2)]
         public string Name { get; set; }
